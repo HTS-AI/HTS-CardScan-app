@@ -1,0 +1,42 @@
+# IDE and editor files
+.idea/
+*.iml
+.vscode/
+
+# Flutter/Dart generated files
+.dart_tool/
+.pub/
+.pub-cache/
+build/
+coverage/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Android machine-specific files
+android/local.properties
+android/.gradle/
+android/app/debug/
+android/app/profile/
+android/app/release/
+
+# Environment and secrets
+.env
+.env.*
+! .env.example
+
+# Signing credentials
+android/key.properties
+*.jks
+*.keystore
+
+# Operating system files
+.DS_Store
+Thumbs.db
+android/local.properties
+android/.gradle/
+android/.cxx/
+android/app/.cxx/
+android/app/build/
+android/key.properties
+*.jks
+*.keystore
