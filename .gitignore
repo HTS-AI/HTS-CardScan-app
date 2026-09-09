@@ -22,7 +22,9 @@ android/app/release/
 # Environment and secrets
 .env
 .env.*
-! .env.example
+!.env.development
+!.env.staging
+!.env.production
 
 # Signing credentials
 android/key.properties

@@ -30,14 +30,17 @@ class ApiService {
 
     if (!AppConfig.isReady) {
       throw ApiException(
-        'App is not configured. Set BASE_URL and API_KEY in mobile/.env.',
+        'App is not configured. Set BASE_URL and API_KEY in .env.${AppConfig.flutterEnv}.',
       );
     }
+    final url = AppConfig.scanUrl;
+    logApi('FLUTTER_ENV=${AppConfig.flutterEnv} API base URL: ${AppConfig.origin}');
+    logApi('API request: POST $url');
     late http.Response response;
     try {
       response = await http
           .post(
-            Uri.parse(AppConfig.scanUrl),
+            Uri.parse(url),
             headers: {
               'Content-Type': 'application/json',
               ...AuthService.instance.authHeaders,
@@ -46,11 +49,14 @@ class ApiService {
           )
           .timeout(const Duration(seconds: 90));
     } on TimeoutException {
+      logApi('API timeout: POST $url');
       throw ApiException('Scan timed out. Try again with a clearer photo.');
     } catch (e) {
+      logApi('API error: POST $url → $e');
       if (e is ApiException) rethrow;
       throw ApiException('Cannot reach the server. Check your connection and try again.');
     }
+    logApi('API response (${response.statusCode}): ${response.body}');
 
     Map<String, dynamic> body = {};
     try {

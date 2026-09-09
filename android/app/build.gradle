@@ -1,0 +1,119 @@
+plugins {
+    id "com.android.application"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def releaseKeystoreFile = keystoreProperties['storeFile']?.trim()
+        ? file(keystoreProperties['storeFile'].trim())
+        : null
+def hasValidReleaseKeystore = keystorePropertiesFile.exists() &&
+        keystoreProperties['keyAlias'] &&
+        keystoreProperties['storePassword'] &&
+        keystoreProperties['keyPassword'] &&
+        releaseKeystoreFile?.exists()
+
+android {
+    namespace = 'com.cardscan.cardscan_ai'
+    compileSdkVersion 36
+    buildToolsVersion "36.0.0"
+    ndkVersion = "28.2.13676358"
+
+    defaultConfig {
+        applicationId "com.cardscan.cardscan_ai"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            if (hasValidReleaseKeystore) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile releaseKeystoreFile
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+
+    buildFeatures {
+        resValues true
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        development {
+            dimension "version"
+            applicationId "com.cardscan.cardscan_ai.development"
+            versionName "0.0.1-development"
+            versionCode 1
+            resValue "string", "app_name", "HTS CardScan Dev"
+            // Must match AppConfig / .env.development (FLUTTER_ENV=development)
+            resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
+            resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
+        }
+        staging {
+            dimension "version"
+            applicationId "com.cardscan.cardscan_ai.staging"
+            versionName "0.0.1-staging"
+            versionCode 1
+            resValue "string", "app_name", "HTS CardScan Staging"
+            // Must match AppConfig / .env.staging (FLUTTER_ENV=staging)
+            resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
+            resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
+        }
+        production {
+            dimension "version"
+            applicationId "com.cardscan.cardscan_ai"
+            versionName "0.0.1"
+            versionCode 1
+            resValue "string", "app_name", "HTS CardScan"
+            // Must match AppConfig / .env.production (FLUTTER_ENV=production)
+            resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
+            resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasValidReleaseKeystore) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+                println 'WARNING: android/key.properties not found. Signing this release with the debug keystore. Play Store uploads need a real upload keystore.'
+            }
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+}
+
+flutter {
+    source = "../.."
+}

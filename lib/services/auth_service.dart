@@ -105,9 +105,11 @@ class AuthService extends ChangeNotifier {
   }) async {
     if (!AppConfig.isReady) {
       throw AuthException(
-        'App is not configured. Set BASE_URL and API_KEY in mobile/.env.',
+        'App is not configured. Set BASE_URL and API_KEY in .env.${AppConfig.flutterEnv}.',
       );
     }
+    logApi('FLUTTER_ENV=${AppConfig.flutterEnv} API base URL: ${AppConfig.origin}');
+    logApi('API request: $method $url');
     late http.Response response;
     try {
       final headers = {
@@ -123,11 +125,14 @@ class AuthService extends ChangeNotifier {
             .timeout(const Duration(seconds: 30));
       }
     } on TimeoutException {
+      logApi('API timeout: $method $url');
       throw AuthException('Request timed out. Try again.');
     } catch (e) {
+      logApi('API error: $method $url → $e');
       if (e is AuthException) rethrow;
       throw AuthException('Cannot reach the server. Check the API URL and try again.');
     }
+    logApi('API response (${response.statusCode}): ${response.body}');
 
     Map<String, dynamic> decoded = {};
     try {

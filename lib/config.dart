@@ -1,14 +1,56 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+void logApi(String message) {
+  debugPrint('\x1B[32m$message\x1B[0m');
+}
 
 /// Backend connection for the Android app.
 ///
-/// Values come from `mobile/.env` (copy `mobile/.env.example`):
-/// - BASE_URL — API origin only, no `/scan`
-/// - API_KEY  — same as `API_KEY` in the server `.env`
+/// Flavor is selected at build time:
+/// `--dart-define=FLUTTER_ENV=development|staging|production`
 ///
-/// Do not load the repo-root `.env` into Flutter. That file has SMTP and LLM
-/// keys and must not be bundled into the APK.
+/// Values resolve in this order:
+/// 1. `--dart-define=BASE_URL` / `--dart-define=API_KEY`
+/// 2. `.env.<FLUTTER_ENV>` (see `.env.development`, `.env.staging`, `.env.production`)
+/// 3. Flavor defaults below
 class AppConfig {
+  static const flutterEnv = String.fromEnvironment(
+    'FLUTTER_ENV',
+    defaultValue: 'development',
+  );
+
+  static const _defineBaseUrl = String.fromEnvironment('BASE_URL');
+  static const _defineApiKey = String.fromEnvironment('API_KEY');
+
+  static const _flavorBaseUrl = {
+    'development': 'https://business-card-scanner-backend.app.knowerai.com',
+    'staging': 'https://business-card-scanner-backend.app.knowerai.com',
+    'production': 'https://business-card-scanner-backend.app.knowerai.com',
+  };
+
+  static const _flavorApiKey = {
+    'development': 'R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M',
+    'staging': 'R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M',
+    'production': 'R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M',
+  };
+
+  static String get envFileName => '.env.$flutterEnv';
+
+  static Future<void> load() async {
+    try {
+      await dotenv.load(fileName: envFileName);
+    } catch (_) {
+      try {
+        await dotenv.load(fileName: '.env');
+      } catch (_) {
+        dotenv.testLoad(fileInput: '');
+      }
+    }
+    logApi('FLUTTER_ENV=$flutterEnv file=$envFileName');
+    logApi('API base URL: $origin');
+  }
+
   static String _read(String key) {
     try {
       return (dotenv.env[key] ?? '').trim();
@@ -17,8 +59,19 @@ class AppConfig {
     }
   }
 
-  static String get baseUrl => _read('BASE_URL');
-  static String get apiKey => _read('API_KEY');
+  static String get baseUrl {
+    if (_defineBaseUrl.trim().isNotEmpty) return _defineBaseUrl.trim();
+    final fromFile = _read('BASE_URL');
+    if (fromFile.isNotEmpty) return fromFile;
+    return (_flavorBaseUrl[flutterEnv] ?? _flavorBaseUrl['development']!).trim();
+  }
+
+  static String get apiKey {
+    if (_defineApiKey.trim().isNotEmpty) return _defineApiKey.trim();
+    final fromFile = _read('API_KEY');
+    if (fromFile.isNotEmpty) return fromFile;
+    return (_flavorApiKey[flutterEnv] ?? _flavorApiKey['development']!).trim();
+  }
 
   static String get origin {
     var raw = baseUrl.trim();
