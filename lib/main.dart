@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
 import 'screens/home_screen.dart';
@@ -10,6 +11,8 @@ import 'theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppConfig.load();
+  final packageInfo = await PackageInfo.fromPlatform();
+  logApi('Package: ${packageInfo.packageName}');
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,

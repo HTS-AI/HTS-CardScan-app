@@ -19,13 +19,13 @@ def hasValidReleaseKeystore = keystorePropertiesFile.exists() &&
         releaseKeystoreFile?.exists()
 
 android {
-    namespace = 'com.cardscan.cardscan_ai'
+    namespace = 'com.hyperthings.cardscan'
     compileSdkVersion 36
     buildToolsVersion "36.0.0"
     ndkVersion = "28.2.13676358"
 
     defaultConfig {
-        applicationId "com.cardscan.cardscan_ai"
+        applicationId "com.hyperthings.cardscan"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         multiDexEnabled true
@@ -57,27 +57,27 @@ android {
     productFlavors {
         development {
             dimension "version"
-            applicationId "com.cardscan.cardscan_ai.development"
+            applicationId "com.hyperthings.cardscan.development"
             versionName "0.0.1-development"
             versionCode 1
             resValue "string", "app_name", "HTS CardScan Dev"
             // Must match AppConfig / .env.development (FLUTTER_ENV=development)
-            resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
+            resValue "string", "base_url", "https://business-card-scanner-backend.development.app.knowerai.com"
             resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
         }
         staging {
             dimension "version"
-            applicationId "com.cardscan.cardscan_ai.staging"
+            applicationId "com.hyperthings.cardscan.staging"
             versionName "0.0.1-staging"
             versionCode 1
             resValue "string", "app_name", "HTS CardScan Staging"
             // Must match AppConfig / .env.staging (FLUTTER_ENV=staging)
-            resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
+            resValue "string", "base_url", "https://business-card-scanner-backend.staging.app.knowerai.com"
             resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
         }
         production {
             dimension "version"
-            applicationId "com.cardscan.cardscan_ai"
+            applicationId "com.hyperthings.cardscan"
             versionName "0.0.1"
             versionCode 1
             resValue "string", "app_name", "HTS CardScan"
