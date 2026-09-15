@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/auth_service.dart';
+import '../theme.dart';
 import 'auth_scaffold.dart';
 import 'forgot_screen.dart';
 import 'signup_screen.dart';
@@ -27,13 +28,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _submit() async {
     if (_busy) return;
+    final email = _email.text.trim();
+    final password = _password.text;
+    if (email.isEmpty && password.isEmpty) {
+      showAppToast(context, 'Enter your email and password.');
+      return;
+    }
+    if (email.isEmpty) {
+      showAppToast(context, 'Enter your work email.');
+      return;
+    }
+    if (password.isEmpty) {
+      showAppToast(context, 'Enter your password.');
+      return;
+    }
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() => _busy = true);
     try {
       await AuthService.instance.login(_email.text, _password.text);
     } on AuthException catch (e) {
       if (!mounted) return;
       if (e.statusCode == 403) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        showAppToast(context, e.message);
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => SignupScreen(prefillEmail: _email.text.trim()),
@@ -41,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      showAppToast(context, e.message);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -56,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           TextField(
             controller: _email,
+            enabled: !_busy,
             keyboardType: TextInputType.emailAddress,
             autocorrect: false,
             decoration: const InputDecoration(
@@ -68,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _password,
             label: 'Password',
             obscure: _hide,
+            enabled: !_busy,
             onToggleObscure: () => setState(() => _hide = !_hide),
             onSubmitted: (_) => _submit(),
           ),

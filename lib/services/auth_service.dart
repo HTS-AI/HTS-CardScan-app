@@ -218,27 +218,22 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> reset(String userEmail, String code, String password) async {
-    final body = await _post(AppConfig.resetUrl, {
+    await _post(AppConfig.resetUrl, {
       'email': userEmail.trim(),
       'code': code.trim(),
       'password': password,
     });
-    try {
-      await _persist(
-        body['token']?.toString(),
-        body['email']?.toString() ?? userEmail.trim(),
-        name: body['name']?.toString(),
-      );
-    } on AuthException {
-      throw AuthException('Password updated. Sign in with your new password.');
-    }
   }
 
-  Future<void> resend(String userEmail, String purpose) async {
-    await _post(AppConfig.resendUrl, {
+  Future<String> resend(String userEmail, String purpose) async {
+    final body = await _post(AppConfig.resendUrl, {
       'email': userEmail.trim(),
       'purpose': purpose,
     });
+    final message = body['message']?.toString().trim() ??
+        body['msg']?.toString().trim() ??
+        '';
+    return message.isNotEmpty ? message : 'A new otp was sent.';
   }
 
   Future<void> refreshProfile() async {

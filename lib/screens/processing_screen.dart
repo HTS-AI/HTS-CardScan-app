@@ -56,12 +56,15 @@ class _ProcessingScreenState extends State<ProcessingScreen> {
     } catch (e) {
       if (!mounted) return;
       final messenger = ScaffoldMessenger.of(context);
+      final height = MediaQuery.sizeOf(context).height;
       Navigator.of(context).pop();
-      messenger
-        ..clearSnackBars()
-        ..showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
+      showAppToast(
+        context,
+        e.toString(),
+        backgroundColor: AppColors.error,
+        messenger: messenger,
+        height: height,
+      );
     } finally {
       await sub.cancel();
     }

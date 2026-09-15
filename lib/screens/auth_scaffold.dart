@@ -154,6 +154,7 @@ class AuthPasswordField extends StatelessWidget {
     required this.obscure,
     required this.onToggleObscure,
     this.onSubmitted,
+    this.enabled = true,
   });
 
   final TextEditingController controller;
@@ -161,11 +162,13 @@ class AuthPasswordField extends StatelessWidget {
   final bool obscure;
   final VoidCallback onToggleObscure;
   final ValueChanged<String>? onSubmitted;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      enabled: enabled,
       obscureText: obscure,
       autocorrect: false,
       enableSuggestions: false,
@@ -175,7 +178,7 @@ class AuthPasswordField extends StatelessWidget {
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           tooltip: obscure ? 'Show password' : 'Hide password',
-          onPressed: onToggleObscure,
+          onPressed: enabled ? onToggleObscure : null,
           icon: Icon(obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
         ),
       ),

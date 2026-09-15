@@ -65,16 +65,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
   Future<void> _copy() async {
     final text = _current.asCopyText();
     if (text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nothing to copy yet.')),
-      );
+      showAppToast(context, 'Nothing to copy yet.');
       return;
     }
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Contact details copied')),
-    );
+    showAppToast(context, 'Contact details copied');
   }
 
   List<String> _splitValues(String raw) => raw
@@ -107,12 +103,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
       final message = e.code == 'no_app'
           ? 'No Contacts app was found on this phone.'
           : 'Could not open Contacts. Try again.';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      showAppToast(context, message);
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open Contacts. Try again.')),
-      );
+      showAppToast(context, 'Could not open Contacts. Try again.');
     } finally {
       if (mounted) setState(() => _saving = false);
     }

@@ -38,11 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not open ${source == ImageSource.camera ? 'camera' : 'gallery'}.')),
+      showAppToast(
+        context,
+        'Could not open ${source == ImageSource.camera ? 'camera' : 'gallery'}.',
       );
     } finally {
       if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _confirmLogout() async {
+    final confirmed = await showLogoutConfirmDialog(context);
+    if (confirmed) {
+      await AuthService.instance.logout();
     }
   }
 
@@ -65,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(builder: (_) => const ProfileScreen()),
                       );
                     },
-                    onLogout: () => AuthService.instance.logout(),
+                    onLogout: _confirmLogout,
                   ),
                   const Spacer(),
                   Container(
@@ -227,17 +235,19 @@ class _PrimaryButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onPressed,
+    this.height = 54,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 54,
+      height: height,
       child: FilledButton.icon(
         onPressed: onPressed,
         icon: Icon(icon),
@@ -257,17 +267,19 @@ class _SecondaryButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onPressed,
+    this.height = 54,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 54,
+      height: height,
       child: OutlinedButton.icon(
         onPressed: onPressed,
         icon: Icon(icon),

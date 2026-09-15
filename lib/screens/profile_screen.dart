@@ -19,16 +19,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _hide = true;
   bool _savingName = false;
   bool _savingPassword = false;
+  late String _originalName;
 
   @override
   void initState() {
     super.initState();
     final auth = AuthService.instance;
-    _name = TextEditingController(text: auth.displayName ?? auth.greetingName);
+    _originalName = (auth.displayName ?? auth.greetingName).trim();
+    _name = TextEditingController(text: _originalName);
+    _name.addListener(_onNameChanged);
   }
 
   @override
   void dispose() {
+    _name.removeListener(_onNameChanged);
     _name.dispose();
     _current.dispose();
     _password.dispose();
@@ -36,25 +40,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  void _onNameChanged() => setState(() {});
+
+  bool get _nameChanged {
+    final next = _name.text.trim();
+    return next.isNotEmpty && next != _originalName;
+  }
+
   Future<void> _saveName() async {
     if (_savingName) return;
     final name = _name.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter your name.')),
-      );
+      showAppToast(context, 'Enter your name.');
       return;
     }
     setState(() => _savingName = true);
     try {
       await AuthService.instance.updateName(name);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Name updated.')),
-      );
+      _originalName = name;
+      showAppToast(context, 'Name updated.');
     } on AuthException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      showAppToast(context, e.message);
     } finally {
       if (mounted) setState(() => _savingName = false);
     }
@@ -63,21 +71,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _savePassword() async {
     if (_savingPassword) return;
     if (_current.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter your current password.')),
-      );
+      showAppToast(context, 'Enter your current password.');
       return;
     }
     if (_password.text.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('New password must be at least 8 characters.')),
-      );
+      showAppToast(context, 'New password must be at least 8 characters.');
       return;
     }
     if (_password.text != _confirm.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('New passwords do not match.')),
-      );
+      showAppToast(context, 'New passwords do not match.');
       return;
     }
     setState(() => _savingPassword = true);
@@ -87,14 +89,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _current.clear();
       _password.clear();
       _confirm.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password updated.')),
-      );
+      showAppToast(context, 'Password updated.');
     } on AuthException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      showAppToast(context, e.message);
     } finally {
       if (mounted) setState(() => _savingPassword = false);
+    }
+  }
+
+  Future<void> _confirmLogout() async {
+    final confirmed = await showLogoutConfirmDialog(context);
+    if (confirmed) {
+      await AuthService.instance.logout();
     }
   }
 
@@ -165,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       AuthPrimaryButton(
                         busy: _savingName,
                         label: 'Update name',
-                        onPressed: _saveName,
+                        onPressed: _nameChanged ? _saveName : null,
                       ),
                     ],
                   ),
@@ -218,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
-                  onPressed: () => AuthService.instance.logout(),
+                  onPressed: _confirmLogout,
                   icon: const Icon(Icons.logout_rounded),
                   label: const Text('Sign out'),
                   style: OutlinedButton.styleFrom(
