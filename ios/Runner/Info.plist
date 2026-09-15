@@ -28,6 +28,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>HTS CardScan needs camera access to scan business cards.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>HTS CardScan needs contacts access to save scanned business cards.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>HTS CardScan needs photo library access to select business card images.</string>
 	<key>UIApplicationSceneManifest</key>

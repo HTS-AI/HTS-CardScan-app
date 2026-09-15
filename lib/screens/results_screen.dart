@@ -100,9 +100,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
       });
     } on PlatformException catch (e) {
       if (!mounted) return;
-      final message = e.code == 'no_app'
-          ? 'No Contacts app was found on this phone.'
-          : 'Could not open Contacts. Try again.';
+      final message = switch (e.code) {
+        'no_app' => 'No Contacts app was found on this phone.',
+        'denied' => 'Allow Contacts access in Settings to save this card.',
+        _ => (e.message ?? '').trim().isEmpty
+            ? 'Could not open Contacts. Try again.'
+            : e.message!,
+      };
       showAppToast(context, message);
     } catch (_) {
       if (!mounted) return;
