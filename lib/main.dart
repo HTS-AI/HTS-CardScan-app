@@ -30,6 +30,7 @@ class CardScanApp extends StatelessWidget {
       animation: AuthService.instance,
       builder: (context, _) {
         return MaterialApp(
+          key: ValueKey(AuthService.instance.isSignedIn),
           title: 'HTS CardScan',
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),

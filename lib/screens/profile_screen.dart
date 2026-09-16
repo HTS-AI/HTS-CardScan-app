@@ -16,7 +16,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _current = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
-  bool _hide = true;
+  bool _hideCurrent = true;
+  bool _hidePassword = true;
+  bool _hideConfirm = true;
   bool _savingName = false;
   bool _savingPassword = false;
   late String _originalName;
@@ -196,22 +198,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       AuthPasswordField(
                         controller: _current,
                         label: 'Current password',
-                        obscure: _hide,
-                        onToggleObscure: () => setState(() => _hide = !_hide),
+                        obscure: _hideCurrent,
+                        onToggleObscure: () => setState(() => _hideCurrent = !_hideCurrent),
                       ),
                       const SizedBox(height: 12),
                       AuthPasswordField(
                         controller: _password,
                         label: 'New password (8+ characters)',
-                        obscure: _hide,
-                        onToggleObscure: () => setState(() => _hide = !_hide),
+                        obscure: _hidePassword,
+                        onToggleObscure: () => setState(() => _hidePassword = !_hidePassword),
                       ),
                       const SizedBox(height: 12),
                       AuthPasswordField(
                         controller: _confirm,
                         label: 'Confirm new password',
-                        obscure: _hide,
-                        onToggleObscure: () => setState(() => _hide = !_hide),
+                        obscure: _hideConfirm,
+                        onToggleObscure: () => setState(() => _hideConfirm = !_hideConfirm),
                         onSubmitted: (_) => _savePassword(),
                       ),
                       const SizedBox(height: 16),

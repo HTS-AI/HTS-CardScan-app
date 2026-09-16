@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     PackageInfo.fromPlatform().then((info) {
       if (!mounted) return;
-      setState(() => _appVersion = '${info.version} (${info.buildNumber})');
+      setState(() => _appVersion = info.version);
     });
   }
 
@@ -135,11 +135,12 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                _appVersion,
+                _appVersion.isEmpty ? '' : 'Version - $_appVersion',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
+                  decoration: TextDecoration.none,
                 ),
               ),
             ),
