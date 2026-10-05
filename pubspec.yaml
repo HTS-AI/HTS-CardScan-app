@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.4.0
   image_picker: ^1.1.2
+  image_picker_android: ^0.8.13
+  image_picker_platform_interface: ^2.11.0
   share_plus: ^11.0.0
   path_provider: ^2.1.5
   google_fonts: ^6.2.1

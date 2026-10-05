@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
@@ -10,6 +12,12 @@ import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Android 15 and below use the documents picker unless this is set.
+  // Android 16+ always uses the system photo picker.
+  final imagePickerImplementation = ImagePickerPlatform.instance;
+  if (imagePickerImplementation is ImagePickerAndroid) {
+    imagePickerImplementation.useAndroidPhotoPicker = true;
+  }
   await AppConfig.load();
   final packageInfo = await PackageInfo.fromPlatform();
   logApi('Package: ${packageInfo.packageName}');

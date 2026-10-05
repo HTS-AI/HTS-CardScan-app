@@ -78,8 +78,8 @@ android {
         production {
             dimension "version"
             applicationId "com.hyperthings.cardscan"
-            versionName "0.0.6"
-            versionCode 6
+            versionName "0.0.7"
+            versionCode 7
             resValue "string", "app_name", "HTS CardScan"
             // Must match AppConfig / .env.production (FLUTTER_ENV=production)
             resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
