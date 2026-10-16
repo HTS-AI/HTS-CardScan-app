@@ -39,7 +39,7 @@ class CardScanApp extends StatelessWidget {
       builder: (context, _) {
         return MaterialApp(
           key: ValueKey(AuthService.instance.isSignedIn),
-          title: 'HTS CardScan',
+          title: 'HyperContact',
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: AuthService.instance.isSignedIn ? const HomeScreen() : const LoginScreen(),

@@ -60,7 +60,7 @@ android {
             applicationId "com.hyperthings.cardscan.development"
             versionName "0.0.1-development"
             versionCode 1
-            resValue "string", "app_name", "HTS CardScan Dev"
+            resValue "string", "app_name", "HyperContact Dev"
             // Must match AppConfig / .env.development (FLUTTER_ENV=development)
             resValue "string", "base_url", "https://business-card-scanner-backend.development.app.knowerai.com"
             resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
@@ -70,7 +70,7 @@ android {
             applicationId "com.hyperthings.cardscan.staging"
             versionName "0.0.1-staging"
             versionCode 1
-            resValue "string", "app_name", "HTS CardScan Staging"
+            resValue "string", "app_name", "HyperContact Staging"
             // Must match AppConfig / .env.staging (FLUTTER_ENV=staging)
             resValue "string", "base_url", "https://business-card-scanner-backend.staging.app.knowerai.com"
             resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"
@@ -78,9 +78,9 @@ android {
         production {
             dimension "version"
             applicationId "com.hyperthings.cardscan"
-            versionName "0.0.7"
-            versionCode 7
-            resValue "string", "app_name", "HTS CardScan"
+            versionName "0.0.8"
+            versionCode 8
+            resValue "string", "app_name", "HyperContact"
             // Must match AppConfig / .env.production (FLUTTER_ENV=production)
             resValue "string", "base_url", "https://business-card-scanner-backend.app.knowerai.com"
             resValue "string", "api_key", "R8CyDUgPwRla5C9CU93gnFDy4JewYw8bxFsa1zDk2_M"

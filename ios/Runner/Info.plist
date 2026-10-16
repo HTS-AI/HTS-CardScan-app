@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>HTS CardScan</string>
+	<string>HyperContact</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>cardscan_ai</string>
+	<string>HyperContact</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,11 +27,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>HTS CardScan needs camera access to scan business cards.</string>
+	<string>HyperContact needs camera access to scan business cards.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>HTS CardScan needs contacts access to save scanned business cards.</string>
+	<string>HyperContact needs contacts access to save scanned business cards.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>HTS CardScan needs photo library access to select business card images.</string>
+	<string>HyperContact needs photo library access to select business card images.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
